@@ -8,9 +8,7 @@ import axios from 'axios';
 import * as _ from 'lodash';
 import { takeUntil } from 'rxjs/operators';
 import { CookieStorageUtil, ICookieStorageOptions } from '../cookie';
-import { ILanguageTranslator, LanguageTranslatorEvent } from './ILanguageTranslator';
-import { Language } from './Language';
-import { LanguageTranslator } from './LanguageTranslator';
+import { ILanguageTranslator, Language, LanguageLocale, LanguageTranslator, LanguageTranslatorEvent } from '@ts-core/language';
 
 export class LanguageService extends Loadable<LanguageTranslatorEvent, Language> {
     // --------------------------------------------------------------------------
@@ -83,7 +81,7 @@ export class LanguageService extends Loadable<LanguageTranslatorEvent, Language>
 
         this._language = language;
         this._rawTranslation = translation;
-        this._translator.setLocale(this._language.locale, this._rawTranslation);
+        this._translator.locale = new LanguageLocale(this._language, this._rawTranslation);
 
         CookieStorageUtil.put(this.options, this._language.locale);
 

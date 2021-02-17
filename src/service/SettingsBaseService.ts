@@ -5,7 +5,7 @@ import { MapCollection } from '@ts-core/common/map';
 import { AbstractSettingsStorage } from '@ts-core/common/settings';
 import { UrlUtil } from '@ts-core/common/util';
 import * as _ from 'lodash';
-import { Language } from '../language/Language';
+import { Language } from '@ts-core/language';
 
 export class SettingsBaseService extends AbstractSettingsStorage implements IDestroyable {
     // --------------------------------------------------------------------------

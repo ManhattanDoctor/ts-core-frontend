@@ -10,7 +10,8 @@
     },
     "license": "ISC",
     "dependencies": {
-        "@ts-core/common": "^1.0.152",
+        "@ts-core/common": "^1.0.154",
+        "@ts-core/language": "^1.0.3",
         "messageformat": "2.3.0"
     },
     "devDependencies": {
