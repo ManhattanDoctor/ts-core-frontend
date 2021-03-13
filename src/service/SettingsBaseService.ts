@@ -65,7 +65,7 @@ export class SettingsBaseService extends AbstractSettingsStorage implements IDes
         _.assign(params, this.getParamsFromCookies());
         _.assign(params, routerParams);
 
-        this.data = params;
+        this._data = params;
         for (let name of Object.keys(params)) {
             this.parseParam(name, params[name]);
         }

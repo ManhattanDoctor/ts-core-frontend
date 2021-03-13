@@ -2,7 +2,6 @@
     "name": "@ts-core/frontend",
     "version": "1.0.35",
     "description": "Classes and utils for frontend",
-    "main": "index.js",
     "scripts": {},
     "author": {
         "name": "Renat Gubaev",
@@ -10,22 +9,11 @@
     },
     "license": "ISC",
     "dependencies": {
-        "@ts-core/common": "^1.0.154",
-        "@ts-core/language": "^1.0.3",
-        "messageformat": "2.3.0"
+        "@ts-core/common": "^1.0.164",
+        "@ts-core/language": "^1.0.3"
     },
     "devDependencies": {
-        "@types/node": "12.12.18",
-        "gulp": "4.0.2",
-        "gulp-clean": "0.4.0",
-        "gulp-typescript": "5.0.1",
-        "del": "5.1.0",
-        "gulp-clean-dir": "1.0.2",
-        "gulp-debug": "4.0.0",
-        "gulp-run-command": "0.0.10",
-        "prettier": "1.19.1",
-        "typescript": "3.4.5",
-        "ts-node": "8.6.2"
+        "gulp-npm-publisher": "1.0.1"
     },
     "repository": {
         "type": "git",
