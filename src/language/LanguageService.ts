@@ -56,7 +56,7 @@ export class LanguageService extends Loadable<LanguageTranslatorEvent, Language>
 
         let language = this.languages.get(locale);
         if (_.isNil(language)) {
-            throw new ExtendedError(`Can't find locale ${locale}`);
+            throw new ExtendedError(`Unable to find language with locale "${locale}"`);
         }
 
         this.status = LoadableStatus.LOADING;
@@ -101,15 +101,15 @@ export class LanguageService extends Loadable<LanguageTranslatorEvent, Language>
             throw new ExtendedError('Service already initialized');
         }
         if (_.isEmpty(url)) {
-            throw new ExtendedError('Url is undefined or empty');
+            throw new ExtendedError('Url is nil');
         }
         if (_.isEmpty(languages)) {
-            throw new ExtendedError('Available languages is undefined or empty');
+            throw new ExtendedError('Languages is empty');
         }
 
+        this.url = url;
         this._languages = languages;
 
-        this.url = url;
         this.isInitialized = true;
     }
 

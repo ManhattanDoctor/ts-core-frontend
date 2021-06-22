@@ -63,13 +63,9 @@ export class NativeWindowService extends Loadable<NativeWindowServiceEvent, void
         }
     };
 
-    private blurHandler = (): void => {
-        this.setFocus(false);
-    };
+    private blurHandler = (): void => this.setFocus(false);
 
-    private focusHandler = (): void => {
-        this.setFocus(true);
-    };
+    private focusHandler = (): void => this.setFocus(true);
 
     // --------------------------------------------------------------------------
     //
