@@ -9,7 +9,7 @@
     },
     "license": "ISC",
     "dependencies": {
-        "@ts-core/common": "^1.0.164",
+        "@ts-core/common": "^1.0.180",
         "@ts-core/language": "^1.0.3"
     },
     "devDependencies": {
