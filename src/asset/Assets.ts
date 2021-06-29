@@ -43,10 +43,6 @@ export class Assets {
         return Assets.getAssetUrl(name, 'file', extension);
     }
 
-    public static getAnimation(name: string, extension: string = 'swf'): string {
-        return Assets.getAssetUrl(name, 'animation', extension);
-    }
-
     // --------------------------------------------------------------------------
     //
     //  Private Methods
