@@ -19,7 +19,6 @@ export class LanguageService<T = any> extends Loadable<LanguageTranslatorEvent, 
     //
     // --------------------------------------------------------------------------
 
-    protected url: string;
     protected isInitialized: boolean;
 
     protected _language: Language;
@@ -108,9 +107,11 @@ export class LanguageService<T = any> extends Loadable<LanguageTranslatorEvent, 
             throw new ExtendedError('Languages is empty');
         }
 
-        this.url = url;
-        this._languages = languages;
+        if (this.loader instanceof LanguageFileLoader) {
+            this.loader.url = url;
+        }
 
+        this._languages = languages;
         this.isInitialized = true;
     }
 
