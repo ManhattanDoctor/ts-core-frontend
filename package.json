@@ -9,8 +9,8 @@
     },
     "license": "ISC",
     "dependencies": {
-        "@ts-core/common": "^1.0.180",
-        "@ts-core/language": "^1.0.5"
+        "@ts-core/common": "^1.0.182",
+        "@ts-core/language": "^1.0.6"
     },
     "devDependencies": {
         "gulp-npm-publisher": "1.0.1"

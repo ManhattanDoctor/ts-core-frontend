@@ -14,11 +14,12 @@ export class ThemeService extends Destroyable {
     //
     // --------------------------------------------------------------------------
 
-    private _theme: Theme;
-    private _themes: MapCollection<Theme>;
+    protected _theme: Theme;
+    protected _themes: MapCollection<Theme>;
+    protected linkSymbol: string;
 
-    private isInitialized: boolean;
-    private observer: Subject<string>;
+    protected observer: Subject<string>;
+    protected isInitialized: boolean;
 
     // --------------------------------------------------------------------------
     //
@@ -28,8 +29,22 @@ export class ThemeService extends Destroyable {
 
     constructor(private options?: IThemeServiceOptions) {
         super();
-        this.observer = new Subject();
         this._themes = new MapCollection('name');
+        this.observer = new Subject();
+        this.linkSymbol = !_.isNil(options) && !_.isNil(options.linkSymbol) ? options.linkSymbol : '⇛';
+    }
+
+    // --------------------------------------------------------------------------
+    //
+    //	Protected Methods
+    //
+    // --------------------------------------------------------------------------
+
+    protected getLink(text: string): string {
+        if (_.isNil(text) || _.isNil(this.linkSymbol) || text.indexOf(this.linkSymbol) !== 0) {
+            return null;
+        }
+        return text.substr(1).trim();
     }
 
     // --------------------------------------------------------------------------
@@ -83,7 +98,15 @@ export class ThemeService extends Destroyable {
     }
 
     public getStyle<T>(name: string): T {
-        return this.theme ? this.theme.getStyle(name) : null;
+        if (_.isNil(name) || _.isNil(this.theme)) {
+            return null;
+        }
+        let item = this.theme.getStyle<T>(name);
+        if (!_.isString(item)) {
+            return item;
+        }
+        let link = this.getLink(item);
+        return !_.isNil(link) ? this.getStyle(link) : item;
     }
 
     // --------------------------------------------------------------------------
@@ -131,4 +154,6 @@ export enum ThemeServiceEvent {
     CHANGED = 'CHANGED'
 }
 
-export interface IThemeServiceOptions extends ICookieStorageOptions {}
+export interface IThemeServiceOptions extends ICookieStorageOptions {
+    linkSymbol?: string;
+}
