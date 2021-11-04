@@ -130,8 +130,8 @@ export class LanguageService<T = any> extends Loadable<LanguageTranslatorEvent, 
         return this.translator.translate({ key, params });
     }
 
-    public isHasTranslation(key: string): boolean {
-        return this.translator.isHasTranslation(key);
+    public isHasTranslation(key: string, isOnlyIfNotEmpty?: boolean): boolean {
+        return this.translator.isHasTranslation(key, isOnlyIfNotEmpty);
     }
 
     public destroy(): void {
