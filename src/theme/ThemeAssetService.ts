@@ -54,6 +54,7 @@ export class ThemeAssetService extends DestroyableContainer {
         return Assets.getBackground(this.getName(id, isIgnoreTheme), extension);
     }
 
+    
     public getName(id: string, isIgnoreTheme?: boolean): string {
         return isIgnoreTheme || !this.isThemeDark() ? id : `${id}Dark`;
     }
