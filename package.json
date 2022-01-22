@@ -1,6 +1,6 @@
 {
     "name": "@ts-core/frontend",
-    "version": "1.0.45",
+    "version": "2.0.0",
     "description": "Classes and utils for frontend",
     "scripts": {},
     "author": {
@@ -9,11 +9,12 @@
     },
     "license": "ISC",
     "dependencies": {
-        "@ts-core/common": "^1.0.184",
-        "@ts-core/language": "^1.0.8"
+        "@ts-core/common": "^2.0.2",
+        "@ts-core/language": "^2.0.1"
     },
     "devDependencies": {
-        "gulp-npm-publisher": "1.0.1"
+        "@types/node": "^14.14.31",
+        "gulp-npm-publisher": "^2.0.2"
     },
     "repository": {
         "type": "git",
