@@ -1,6 +1,6 @@
 import { ExtendedError } from '@ts-core/common/error';
 import * as _ from 'lodash';
-import { IAssetsProvider, AssetUrlProvider } from './provider';
+import { IAssetsProvider } from './provider';
 
 export class Assets {
     // --------------------------------------------------------------------------
@@ -9,17 +9,13 @@ export class Assets {
     //
     // --------------------------------------------------------------------------
 
-    private static PROVIDER: IAssetsProvider;
+    public static provider: IAssetsProvider;
 
     // --------------------------------------------------------------------------
     //
     //	Public Methods
     //
     // --------------------------------------------------------------------------
-
-    public static initialize(urlOrProvider: string | IAssetsProvider): void {
-        Assets.PROVIDER = _.isString(urlOrProvider) ? new AssetUrlProvider(urlOrProvider) : urlOrProvider;
-    }
 
     public static getIcon(name: string, extension: string = 'png'): string {
         return Assets.getAssetUrl('icon', name, extension);
@@ -51,10 +47,10 @@ export class Assets {
     // --------------------------------------------------------------------------
 
     private static getAssetUrl(folder: string, name: string, extension: string): string {
-        if (_.isNil(Assets.PROVIDER)) {
+        if (_.isNil(Assets.provider)) {
             throw new ExtendedError('Unable to get asset: initialization is required');
         }
-        return Assets.PROVIDER.getUrl(folder, name, extension);
+        return Assets.provider.getUrl(folder, name, extension);
     }
 
 

@@ -122,9 +122,6 @@ export class SettingsBaseService extends AbstractSettingsStorage implements IDes
     public get apiUrl(): string {
         return SettingsBaseService.parseUrl(this.getValue('apiUrl'));
     }
-    public get logoutUrl(): string {
-        return SettingsBaseService.parseUrl(this.getValue('logoutUrl'));
-    }
     public get assetsUrl(): string {
         return SettingsBaseService.parseUrl(this.getValue('assetsUrl'));
     }

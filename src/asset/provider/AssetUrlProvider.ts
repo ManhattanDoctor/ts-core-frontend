@@ -30,3 +30,13 @@ export class AssetUrlProvider implements IAssetsProvider {
         return `${this.url}${UrlUtil.parseUrl(folder)}${name}.${extension}`;
     }
 }
+
+/*
+private static getAssetUrl(name: string, folder: string, extension: string): string {
+    let value = Assets.getAssetFolderUrl(folder) + name;
+    if (!_.isNil(value)) {
+        value += `.${extension}`;
+    }
+    return value;
+}
+*/
