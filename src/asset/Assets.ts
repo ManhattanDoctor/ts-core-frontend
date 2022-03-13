@@ -1,5 +1,6 @@
-import { UrlUtil } from '@ts-core/common/util';
+import { ExtendedError } from '@ts-core/common/error';
 import * as _ from 'lodash';
+import { IAssetsProvider, AssetUrlProvider } from './provider';
 
 export class Assets {
     // --------------------------------------------------------------------------
@@ -8,7 +9,7 @@ export class Assets {
     //
     // --------------------------------------------------------------------------
 
-    private static URL: string = '';
+    private static PROVIDER: IAssetsProvider;
 
     // --------------------------------------------------------------------------
     //
@@ -16,31 +17,31 @@ export class Assets {
     //
     // --------------------------------------------------------------------------
 
-    public static initialize(url: string): void {
-        Assets.URL = url;
+    public static initialize(urlOrProvider: string | IAssetsProvider): void {
+        Assets.PROVIDER = _.isString(urlOrProvider) ? new AssetUrlProvider(urlOrProvider) : urlOrProvider;
     }
 
     public static getIcon(name: string, extension: string = 'png'): string {
-        return Assets.getAssetUrl(name, 'icon', extension);
+        return Assets.getAssetUrl('icon', name, extension);
     }
 
     public static getImage(name: string, extension: string = 'png'): string {
-        return Assets.getAssetUrl(name, 'image', extension);
+        return Assets.getAssetUrl('image', name, extension);
     }
 
     public static getBackground(name: string, extension: string = 'png'): string {
-        return Assets.getAssetUrl(name, 'background', extension);
+        return Assets.getAssetUrl('background', name, extension);
     }
 
     public static getVideo(name: string, extension: string = 'mp4'): string {
-        return Assets.getAssetUrl(name, 'video', extension);
+        return Assets.getAssetUrl('video', name, extension);
     }
     public static getSound(name: string, extension: string = 'mp3'): string {
-        return Assets.getAssetUrl(name, 'sound', extension);
+        return Assets.getAssetUrl('sound', name, extension);
     }
 
     public static getFile(name: string, extension: string): string {
-        return Assets.getAssetUrl(name, 'file', extension);
+        return Assets.getAssetUrl('file', name, extension);
     }
 
     // --------------------------------------------------------------------------
@@ -49,29 +50,12 @@ export class Assets {
     //
     // --------------------------------------------------------------------------
 
-    private static getAssetUrl(name: string, folder: string, extension: string): string {
-        let value = Assets.getAssetFolderUrl(folder) + name;
-        if (!_.isNil(value)) {
-            value += `.${extension}`;
+    private static getAssetUrl(folder: string, name: string, extension: string): string {
+        if (_.isNil(Assets.PROVIDER)) {
+            throw new ExtendedError('Unable to get asset: initialization is required');
         }
-        return value;
+        return Assets.PROVIDER.getUrl(folder, name, extension);
     }
 
-    private static getAssetFolderUrl(name: string): string {
-        return UrlUtil.parseUrl(Assets.URL + name);
-    }
 
-    // --------------------------------------------------------------------------
-    //
-    //	Public Properties
-    //
-    // --------------------------------------------------------------------------
-
-    public static get languagesUrl(): string {
-        return `${Assets.assetsUrl}language/`;
-    }
-
-    public static get assetsUrl(): string {
-        return Assets.URL;
-    }
 }

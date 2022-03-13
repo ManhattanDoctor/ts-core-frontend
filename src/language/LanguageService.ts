@@ -2,9 +2,6 @@ import { Loadable, LoadableEvent, LoadableStatus } from '@ts-core/common';
 import { ExtendedError } from '@ts-core/common/error';
 import { MapCollection } from '@ts-core/common/map';
 import { ObservableData } from '@ts-core/common/observer';
-import { PromiseReflector } from '@ts-core/common/promise';
-import { CloneUtil } from '@ts-core/common/util';
-import axios from 'axios';
 import * as _ from 'lodash';
 import { takeUntil } from 'rxjs/operators';
 import { CookieStorageUtil, ICookieStorageOptions } from '../cookie';
@@ -28,8 +25,6 @@ export class LanguageService<T = any> extends Loadable<LanguageTranslatorEvent, 
     protected _loader: ILanguageLoader<T>;
     protected _translator: ILanguageTranslator;
 
-    // public filePrefixes: Array<string> = ['.json', 'Custom.json'];
-
     // --------------------------------------------------------------------------
     //
     //	Constructor
@@ -42,9 +37,7 @@ export class LanguageService<T = any> extends Loadable<LanguageTranslatorEvent, 
         this._translator = new LanguageTranslator();
 
         this.addDestroyable(this.translator);
-        this.translator.events.pipe(takeUntil(this.destroyed)).subscribe(event => {
-            this.observer.next(new ObservableData(event.type, this.language, event.error));
-        });
+        this.translator.events.pipe(takeUntil(this.destroyed)).subscribe(event => this.observer.next(new ObservableData(event.type, this.language, event.error)));
     }
 
     // --------------------------------------------------------------------------
@@ -183,4 +176,4 @@ export class LanguageService<T = any> extends Loadable<LanguageTranslatorEvent, 
     }
 }
 
-export interface ILanguageServiceOptions extends ICookieStorageOptions {}
+export interface ILanguageServiceOptions extends ICookieStorageOptions { }
