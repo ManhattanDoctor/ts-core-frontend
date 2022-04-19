@@ -8,7 +8,7 @@ export class AssetUrlProvider implements IAssetsProvider {
     //
     // --------------------------------------------------------------------------
 
-    protected url: string;
+    public url: string;
 
     // --------------------------------------------------------------------------
     //
@@ -26,8 +26,8 @@ export class AssetUrlProvider implements IAssetsProvider {
     //
     // --------------------------------------------------------------------------
 
-    public getUrl(folder: string, name: string, extension: string): string {
-        return `${this.url}${UrlUtil.parseUrl(folder)}${name}.${extension}`;
+    public getUrl(directory: string, name: string, extension: string): string {
+        return `${this.url}${UrlUtil.parseUrl(directory)}${name}.${extension}`;
     }
 }
 
