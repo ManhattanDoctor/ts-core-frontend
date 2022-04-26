@@ -34,7 +34,11 @@ export class SettingsBaseService extends AbstractSettingsStorage implements IDes
     // --------------------------------------------------------------------------
 
     protected isInitialized: boolean;
+
+    protected _apiUrl: string;
+    protected _assetsUrl: string;
     protected _languages: MapCollection<Language>;
+    protected _versionDate: Date;
 
     // --------------------------------------------------------------------------
     //
@@ -86,9 +90,9 @@ export class SettingsBaseService extends AbstractSettingsStorage implements IDes
     //
     // --------------------------------------------------------------------------
 
-    protected setParamsToCookies(): any {}
+    protected setParamsToCookies(): any { }
 
-    protected getParamsFromCookies(): any {}
+    protected getParamsFromCookies(): any { }
 
     protected parseLanguages(value: string): void {
         this._languages.clear();
@@ -106,7 +110,19 @@ export class SettingsBaseService extends AbstractSettingsStorage implements IDes
             case 'languages':
                 this.parseLanguages(value);
                 break;
+            case 'versionDate':
+                this._versionDate = new Date(value);
+                break;
+            case 'apiUrl':
+                this._apiUrl = SettingsBaseService.parseUrl(value);
+                break;
+            case 'assetsUrl':
+                this._assetsUrl = SettingsBaseService.parseUrl(value);
+                break;
         }
+
+           // SettingsBaseService.parseUrl(this.getValue('apiUrl'));
+    // SettingsBaseService.parseUrl(this.getValue('assetsUrl'));
     }
 
     // --------------------------------------------------------------------------
@@ -120,10 +136,11 @@ export class SettingsBaseService extends AbstractSettingsStorage implements IDes
     }
 
     public get apiUrl(): string {
-        return SettingsBaseService.parseUrl(this.getValue('apiUrl'));
+        return this._apiUrl; 
     }
+
     public get assetsUrl(): string {
-        return SettingsBaseService.parseUrl(this.getValue('assetsUrl'));
+        return this._assetsUrl;
     }
 
     public get theme(): string {
@@ -136,10 +153,20 @@ export class SettingsBaseService extends AbstractSettingsStorage implements IDes
     public get language(): string {
         return this.getValue('language');
     }
+
     public get cookieDomain(): string {
         return this.getValue('cookieDomain');
     }
+
     public get languages(): MapCollection<Language> {
         return this._languages;
+    }
+    
+    public get version(): string {
+        return this.getValue('version');
+    }
+    
+    public get versionDate(): Date {
+        return this._versionDate;
     }
 }
