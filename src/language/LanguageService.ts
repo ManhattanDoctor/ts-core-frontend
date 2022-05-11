@@ -6,7 +6,7 @@ import * as _ from 'lodash';
 import { takeUntil } from 'rxjs/operators';
 import { CookieStorageUtil, ICookieStorageOptions } from '../cookie';
 import { ILanguageLoader, ILanguageTranslator, Language, LanguageLocale, LanguageTranslatorEvent } from '@ts-core/language';
-import { LanguageFileLoader } from '@ts-core/language/loader';
+import { LanguageFileLoader, LanguageUrlLoader } from '@ts-core/language/loader';
 import { LanguageTranslator } from '@ts-core/language/translator';
 
 export class LanguageService<T = any> extends Loadable<LanguageTranslatorEvent, Language> {
@@ -46,7 +46,7 @@ export class LanguageService<T = any> extends Loadable<LanguageTranslatorEvent, 
     //
     // --------------------------------------------------------------------------
 
-    private async load(locale?: string | Language): Promise<void> {
+    protected async load(locale?: string | Language): Promise<void> {
         if (this.isDestroyed) {
             return;
         }
@@ -83,6 +83,8 @@ export class LanguageService<T = any> extends Loadable<LanguageTranslatorEvent, 
         }
     }
 
+    protected commitLoaderProperties(): void { }
+
     // --------------------------------------------------------------------------
     //
     //	Public Methods
@@ -100,7 +102,7 @@ export class LanguageService<T = any> extends Loadable<LanguageTranslatorEvent, 
             throw new ExtendedError('Languages is empty');
         }
 
-        if (this.loader instanceof LanguageFileLoader) {
+        if (this.loader instanceof LanguageFileLoader || this.loader instanceof LanguageUrlLoader) {
             this.loader.url = url;
         }
 
@@ -133,6 +135,7 @@ export class LanguageService<T = any> extends Loadable<LanguageTranslatorEvent, 
         }
         super.destroy();
 
+        this.loader = null;
         this._language = null;
         this._languages = null;
         this._rawTranslation = null;
@@ -146,6 +149,15 @@ export class LanguageService<T = any> extends Loadable<LanguageTranslatorEvent, 
 
     public get loader(): ILanguageLoader<T> {
         return this._loader;
+    }
+    public set loader(value: ILanguageLoader<T>) {
+        if (value === this._loader) {
+            return;
+        }
+        this._loader = value;
+        if (!_.isNil(value)) {
+            this.commitLoaderProperties();
+        }
     }
 
     public get translator(): ILanguageTranslator {
