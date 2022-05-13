@@ -1,5 +1,6 @@
 import { UrlUtil } from "@ts-core/common/util";
 import { IAssetsProvider } from "./IAssetsProvider";
+import * as _ from 'lodash';
 
 export class AssetUrlProvider implements IAssetsProvider {
     // --------------------------------------------------------------------------
@@ -27,16 +28,7 @@ export class AssetUrlProvider implements IAssetsProvider {
     // --------------------------------------------------------------------------
 
     public getUrl(directory: string, name: string, extension: string): string {
-        return `${this.url}${UrlUtil.parseUrl(directory)}${name}.${extension}`;
+        let value = `${this.url}${UrlUtil.parseUrl(directory)}${name}`;
+        return !_.isNil(extension) ? `${value}.${extension}` : value;
     }
 }
-
-/*
-private static getAssetUrl(name: string, folder: string, extension: string): string {
-    let value = Assets.getAssetFolderUrl(folder) + name;
-    if (!_.isNil(value)) {
-        value += `.${extension}`;
-    }
-    return value;
-}
-*/
