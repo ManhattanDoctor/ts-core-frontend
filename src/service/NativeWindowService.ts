@@ -1,7 +1,6 @@
 import * as _ from 'lodash';
 import { Subject } from 'rxjs';
-import { Loadable, LoadableStatus } from '@ts-core/common';
-import { ObservableData } from '@ts-core/common/observer';
+import { Loadable, ObservableData, LoadableStatus } from '@ts-core/common';
 
 export class NativeWindowService extends Loadable<NativeWindowServiceEvent, void> {
     // --------------------------------------------------------------------------

@@ -1,9 +1,7 @@
-import { Destroyable } from '@ts-core/common';
-import { ExtendedError } from '@ts-core/common/error';
-import { MapCollection } from '@ts-core/common/map';
+import { Destroyable, ExtendedError, MapCollection } from '@ts-core/common';
 import * as _ from 'lodash';
-import { Observable, Subject } from 'rxjs';
-import { map, filter } from 'rxjs/operators';
+import { Observable, filter, Subject } from 'rxjs';
+import { } from 'rxjs';
 import { CookieStorageUtil, ICookieStorageOptions } from '../cookie';
 import { Theme } from './Theme';
 

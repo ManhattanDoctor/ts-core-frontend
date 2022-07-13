@@ -1,9 +1,4 @@
-import { IDestroyable } from '@ts-core/common';
-import { ExtendedError } from '@ts-core/common/error';
-import { LoggerLevel } from '@ts-core/common/logger';
-import { MapCollection } from '@ts-core/common/map';
-import { AbstractSettingsStorage } from '@ts-core/common/settings';
-import { UrlUtil } from '@ts-core/common/util';
+import { UrlUtil, ExtendedError, LoggerLevel, IDestroyable, AbstractSettingsStorage, MapCollection } from '@ts-core/common';
 import * as _ from 'lodash';
 import { Language } from '@ts-core/language';
 
@@ -121,8 +116,8 @@ export class SettingsBaseService extends AbstractSettingsStorage implements IDes
                 break;
         }
 
-           // SettingsBaseService.parseUrl(this.getValue('apiUrl'));
-    // SettingsBaseService.parseUrl(this.getValue('assetsUrl'));
+        // SettingsBaseService.parseUrl(this.getValue('apiUrl'));
+        // SettingsBaseService.parseUrl(this.getValue('assetsUrl'));
     }
 
     // --------------------------------------------------------------------------
@@ -136,7 +131,7 @@ export class SettingsBaseService extends AbstractSettingsStorage implements IDes
     }
 
     public get apiUrl(): string {
-        return this._apiUrl; 
+        return this._apiUrl;
     }
 
     public get assetsUrl(): string {
@@ -161,11 +156,11 @@ export class SettingsBaseService extends AbstractSettingsStorage implements IDes
     public get languages(): MapCollection<Language> {
         return this._languages;
     }
-    
+
     public get version(): string {
         return this.getValue('version');
     }
-    
+
     public get versionDate(): Date {
         return this._versionDate;
     }

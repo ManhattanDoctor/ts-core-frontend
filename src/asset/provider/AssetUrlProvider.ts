@@ -1,4 +1,4 @@
-import { UrlUtil } from "@ts-core/common/util";
+import { UrlUtil } from "@ts-core/common";
 import { IAssetsProvider } from "./IAssetsProvider";
 import * as _ from 'lodash';
 
