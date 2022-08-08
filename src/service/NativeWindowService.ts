@@ -55,7 +55,7 @@ export class NativeWindowService extends Loadable<NativeWindowServiceEvent, void
         if (this.isLoaded) {
             return;
         }
-        this.status = document.readyState === 'complete' ? LoadableStatus.LOADED : LoadableStatus.NOT_LOADED;
+        this.status = this.document.readyState === 'complete' ? LoadableStatus.LOADED : LoadableStatus.NOT_LOADED;
         if (this.isLoaded) {
             clearInterval(this.timer);
             this.observer.next(new ObservableData(NativeWindowServiceEvent.LOADED));
@@ -73,21 +73,21 @@ export class NativeWindowService extends Loadable<NativeWindowServiceEvent, void
     // --------------------------------------------------------------------------
 
     public open(url?: string, target?: string): void {
-        window.open(url, target);
+        this.window.open(url, target);
     }
 
     public focus(): void {
-        window.focus();
+        this.window.focus();
     }
 
     public blur(): void {
-        window.blur();
+        this.window.blur();
     }
 
     public getParam(name: string): string {
         name = name.replace(/[\[\]]/g, '\\$&');
         let regex = new RegExp('[?&]' + name + '(=([^&#]*)|&|#|$)');
-        let results: Array<string> = regex.exec(window.location.href);
+        let results: Array<string> = regex.exec(this.window.location.href);
 
         if (_.isNil(results)) {
             return null;
@@ -100,7 +100,7 @@ export class NativeWindowService extends Loadable<NativeWindowServiceEvent, void
 
     public getParams(source?: string): URLSearchParams {
         if (_.isNil(source)) {
-            source = window.location.search;
+            source = this.window.location.search;
         }
         return new URLSearchParams(source);
     }
@@ -116,19 +116,23 @@ export class NativeWindowService extends Loadable<NativeWindowServiceEvent, void
     }
 
     public get url(): string {
-        return window.location.href;
+        return this.window.location.href;
     }
 
     public get title(): string {
-        return document.title;
+        return this.document.title;
     }
 
     public set title(value: string) {
-        document.title = value;
+        this.document.title = value;
     }
 
     public get window(): Window {
-        return window;
+        return this.document.defaultView;
+    }
+
+    public get document(): Document {
+        return document;
     }
 }
 
