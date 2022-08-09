@@ -9,8 +9,9 @@ export class NativeWindowService extends Loadable<NativeWindowServiceEvent, void
     //
     // --------------------------------------------------------------------------
 
-    private timer: any;
-    private _isFocused: boolean = true;
+    protected timer: any;
+    protected _document: Document;
+    protected _isFocused: boolean = true;
 
     // --------------------------------------------------------------------------
     //
@@ -18,11 +19,12 @@ export class NativeWindowService extends Loadable<NativeWindowServiceEvent, void
     //
     // --------------------------------------------------------------------------
 
-    constructor() {
+    constructor(item?: Document) {
         super();
         this.observer = new Subject();
-        this.checkLoadState();
+        this._document = !_.isNil(item) ? item : document;
 
+        this.checkLoadState();
         if (!this.isLoaded) {
             this.timer = setInterval(this.checkLoadState, 500);
         }
@@ -132,7 +134,7 @@ export class NativeWindowService extends Loadable<NativeWindowServiceEvent, void
     }
 
     public get document(): Document {
-        return document;
+        return this._document;
     }
 }
 
