@@ -10,6 +10,7 @@ export class ScriptLoader extends Loadable {
     // --------------------------------------------------------------------------
 
     private url: string;
+    private _document: Document;
     private promise: PromiseHandler<void>;
 
     // --------------------------------------------------------------------------
@@ -18,9 +19,10 @@ export class ScriptLoader extends Loadable {
     //
     // --------------------------------------------------------------------------
 
-    constructor(url: string, private nativeWindow: NativeWindowService) {
+    constructor(url: string, item?: Document) {
         super();
         this.url = url;
+        this._document = !_.isNil(item) ? item : document;
     }
 
     // --------------------------------------------------------------------------
@@ -34,8 +36,8 @@ export class ScriptLoader extends Loadable {
             return this.promise.promise;
         }
 
-        let script = this.nativeWindow.document.createElement('script');
-        this.nativeWindow.document.documentElement.firstChild.appendChild(script);
+        let script = this.document.createElement('script');
+        this.document.documentElement.firstChild.appendChild(script);
 
         script.onload = () => {
             this.status = LoadableStatus.LOADED;
@@ -53,6 +55,16 @@ export class ScriptLoader extends Loadable {
         this.promise = PromiseHandler.create<void>();
         script.src = this.url;
         return this.promise.promise;
+    }
+
+    // --------------------------------------------------------------------------
+    //
+    //  Private Properties
+    //
+    // --------------------------------------------------------------------------
+
+    private get document(): Document {
+        return this._document;
     }
 
 }

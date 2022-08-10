@@ -3,7 +3,6 @@ import * as _ from 'lodash';
 import { Observable, filter, Subject } from 'rxjs';
 import { } from 'rxjs';
 import { CookieStorageUtil, ICookieStorageOptions } from '../cookie';
-import { NativeWindowService } from '../service/NativeWindowService';
 import { Theme } from './Theme';
 
 export class ThemeService extends Destroyable {
@@ -20,15 +19,19 @@ export class ThemeService extends Destroyable {
     protected observer: Subject<string>;
     protected isInitialized: boolean;
 
+    private _document: Document;
+
     // --------------------------------------------------------------------------
     //
     //	Constructor
     //
     // --------------------------------------------------------------------------
 
-    constructor(private nativeWindow: NativeWindowService, private options?: IThemeServiceOptions) {
+    constructor(private options?: IThemeServiceOptions, item?: Document) {
         super();
         this._themes = new MapCollection('name');
+        this._document = !_.isNil(item) ? item : document;
+
         this.observer = new Subject();
         this.linkSymbol = !_.isNil(options) && !_.isNil(options.linkSymbol) ? options.linkSymbol : '⇛';
     }
@@ -134,7 +137,7 @@ export class ThemeService extends Destroyable {
             return;
         }
 
-        let element: HTMLElement = this.nativeWindow.document.body;
+        let element: HTMLElement = this.document.body;
         if (this._theme) {
             element.classList.remove(this._theme.styleName);
         }
@@ -146,6 +149,16 @@ export class ThemeService extends Destroyable {
             element.classList.add(this._theme.styleName);
         }
         this.observer.next(ThemeServiceEvent.CHANGED);
+    }
+
+    // --------------------------------------------------------------------------
+    //
+    //  Private Properties
+    //
+    // --------------------------------------------------------------------------
+
+    private get document(): Document {
+        return this._document;
     }
 }
 
