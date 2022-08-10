@@ -1,5 +1,6 @@
 import { ObservableData, PromiseHandler, Loadable, LoadableEvent, LoadableStatus } from '@ts-core/common';
 import * as _ from 'lodash';
+import { NativeWindowService } from '../service/NativeWindowService';
 
 export class ScriptLoader extends Loadable {
     // --------------------------------------------------------------------------
@@ -17,7 +18,7 @@ export class ScriptLoader extends Loadable {
     //
     // --------------------------------------------------------------------------
 
-    constructor(url: string) {
+    constructor(url: string, private nativeWindow: NativeWindowService) {
         super();
         this.url = url;
     }
@@ -33,8 +34,8 @@ export class ScriptLoader extends Loadable {
             return this.promise.promise;
         }
 
-        let script = document.createElement('script');
-        document.documentElement.firstChild.appendChild(script);
+        let script = this.nativeWindow.document.createElement('script');
+        this.nativeWindow.document.documentElement.firstChild.appendChild(script);
 
         script.onload = () => {
             this.status = LoadableStatus.LOADED;

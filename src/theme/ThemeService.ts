@@ -3,6 +3,7 @@ import * as _ from 'lodash';
 import { Observable, filter, Subject } from 'rxjs';
 import { } from 'rxjs';
 import { CookieStorageUtil, ICookieStorageOptions } from '../cookie';
+import { NativeWindowService } from '../service/NativeWindowService';
 import { Theme } from './Theme';
 
 export class ThemeService extends Destroyable {
@@ -25,7 +26,7 @@ export class ThemeService extends Destroyable {
     //
     // --------------------------------------------------------------------------
 
-    constructor(private options?: IThemeServiceOptions) {
+    constructor(private nativeWindow: NativeWindowService, private options?: IThemeServiceOptions) {
         super();
         this._themes = new MapCollection('name');
         this.observer = new Subject();
@@ -133,7 +134,7 @@ export class ThemeService extends Destroyable {
             return;
         }
 
-        let element: HTMLElement = document.body;
+        let element: HTMLElement = this.nativeWindow.document.body;
         if (this._theme) {
             element.classList.remove(this._theme.styleName);
         }
