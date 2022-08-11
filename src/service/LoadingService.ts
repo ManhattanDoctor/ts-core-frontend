@@ -44,14 +44,4 @@ export class LoadingService extends Loadable<void, void> {
         this.counter--;
         this.checkStatus();
     }
-
-    public destroy(): void {
-        if (this.isDestroyed) {
-            return;
-        }
-        super.destroy();
-
-        this.observer.complete();
-        this.observer = null;
-    }
 }
