@@ -9,7 +9,6 @@ export class NativeWindowService extends Loadable<NativeWindowServiceEvent, void
     //
     // --------------------------------------------------------------------------
 
-    protected timer: any;
     protected _document: Document;
     protected _isFocused: boolean = true;
 
@@ -24,9 +23,11 @@ export class NativeWindowService extends Loadable<NativeWindowServiceEvent, void
         this.observer = new Subject();
         this._document = !_.isNil(item) ? item : document;
 
-        this.checkLoadState();
-        if (!this.isLoaded) {
-            this.timer = setInterval(this.checkLoadState, 500);
+        if (this.document.readyState !== 'complete') {
+            this.document.addEventListener('DOMContentLoaded', this.contentLoadedHandler);
+        }
+        else {
+            this.contentLoadedHandler();
         }
 
         this.window.addEventListener('blur', this.blurHandler);
@@ -35,16 +36,22 @@ export class NativeWindowService extends Loadable<NativeWindowServiceEvent, void
 
     // --------------------------------------------------------------------------
     //
-    // 	Private Methods
+    // 	Protected Methods
     //
     // --------------------------------------------------------------------------
 
-    private setFocus(value: boolean) {
+    protected setFocus(value: boolean) {
         if (value === this._isFocused) {
             return;
         }
         this._isFocused = value;
         this.observer.next(new ObservableData(NativeWindowServiceEvent.FOCUS_CHANGED));
+    }
+
+    protected commitStatusChangedProperties(): void {
+        if (this.isLoaded) {
+            this.observer.next(new ObservableData(NativeWindowServiceEvent.LOADED));
+        }
     }
 
     // --------------------------------------------------------------------------
@@ -53,20 +60,11 @@ export class NativeWindowService extends Loadable<NativeWindowServiceEvent, void
     //
     // --------------------------------------------------------------------------
 
-    private checkLoadState = (): void => {
-        if (this.isLoaded) {
-            return;
-        }
-        this.status = this.document.readyState === 'complete' ? LoadableStatus.LOADED : LoadableStatus.NOT_LOADED;
-        if (this.isLoaded) {
-            clearInterval(this.timer);
-            this.observer.next(new ObservableData(NativeWindowServiceEvent.LOADED));
-        }
-    };
+    protected blurHandler = (): void => this.setFocus(false);
 
-    private blurHandler = (): void => this.setFocus(false);
+    protected focusHandler = (): void => this.setFocus(true);
 
-    private focusHandler = (): void => this.setFocus(true);
+    protected contentLoadedHandler = (): void => { this.status = LoadableStatus.LOADED };
 
     // --------------------------------------------------------------------------
     //
