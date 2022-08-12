@@ -96,7 +96,7 @@ export class LanguageService<T = any> extends Loadable<LanguageTranslatorEvent, 
             throw new ExtendedError('Languages is empty');
         }
 
-        if (this.loader instanceof LanguageFileLoader || this.loader instanceof LanguageUrlLoader) {
+        if (this.loader instanceof LanguageFileLoader) {
             this.loader.url = url;
         }
 
