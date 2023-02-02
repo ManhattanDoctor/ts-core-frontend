@@ -2,7 +2,7 @@ import { Loadable, ExtendedError, MapCollection, ObservableData, LoadableEvent, 
 import * as _ from 'lodash';
 import { takeUntil } from 'rxjs';
 import { CookieStorageUtil, ICookieStorageOptions } from '../cookie';
-import { LanguageFileLoader, LanguageUrlLoader, LanguageTranslator, ILanguageLoader, ILanguageTranslator, Language, LanguageLocale, LanguageTranslatorEvent } from '@ts-core/language';
+import { LanguageFileLoader, LanguageTranslator, ILanguageLoader, ILanguageTranslator, Language, LanguageLocale, LanguageTranslatorEvent } from '@ts-core/language';
 export class LanguageService<T = any> extends Loadable<LanguageTranslatorEvent, Language> {
     // --------------------------------------------------------------------------
     //

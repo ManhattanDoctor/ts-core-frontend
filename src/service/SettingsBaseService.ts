@@ -73,7 +73,7 @@ export class SettingsBaseService extends AbstractSettingsStorage implements IDes
     }
 
     public destroy(): void {
-        if (this._languages) {
+        if (!_.isNil(this._languages)) {
             this._languages.destroy();
             this._languages = null;
         }
@@ -88,17 +88,6 @@ export class SettingsBaseService extends AbstractSettingsStorage implements IDes
     protected setParamsToCookies(): any { }
 
     protected getParamsFromCookies(): any { }
-
-    protected parseLanguages(value: string): void {
-        this._languages.clear();
-        let items = value.split(SettingsBaseService.LANGUAGE_SEPARATOR);
-        for (let item of items) {
-            let language = item.split(SettingsBaseService.LANGUAGE_CODE_SEPARATOR);
-            if (language.length === 2) {
-                this._languages.add(new Language(language[0], language[1]));
-            }
-        }
-    }
 
     protected parseParam(name: string, value: any): void {
         switch (name) {
@@ -118,6 +107,38 @@ export class SettingsBaseService extends AbstractSettingsStorage implements IDes
 
         // SettingsBaseService.parseUrl(this.getValue('apiUrl'));
         // SettingsBaseService.parseUrl(this.getValue('assetsUrl'));
+    }
+
+    // --------------------------------------------------------------------------
+    //
+    //	Parse Languages
+    //
+    // --------------------------------------------------------------------------
+
+    protected parseLanguages(value: any): void {
+        this._languages.clear();
+        if (_.isString(value)) {
+            this.parseLanguagesString(value);
+        }
+        else if (_.isArray(value)) {
+            this.parseLanguagesArray(value);
+        }
+    }
+
+    protected parseLanguagesString(value: string): void {
+        let items = value.split(SettingsBaseService.LANGUAGE_SEPARATOR);
+        for (let item of items) {
+            let language = item.split(SettingsBaseService.LANGUAGE_CODE_SEPARATOR);
+            if (language.length === 2) {
+                this._languages.add(new Language(language[0], language[1]));
+            }
+        }
+    }
+
+    protected parseLanguagesArray(value: Array<{ name: string, locale: string }>): void {
+        for (let item of value) {
+            this._languages.add(new Language(item.locale, item.name));
+        }
     }
 
     // --------------------------------------------------------------------------
