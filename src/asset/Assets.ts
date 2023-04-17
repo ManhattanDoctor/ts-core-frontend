@@ -52,6 +52,4 @@ export class Assets {
         }
         return Assets.provider.getUrl(folder, name, extension);
     }
-
-
 }

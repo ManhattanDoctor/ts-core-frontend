@@ -1,6 +1,7 @@
 export * from './asset/Assets';
 export * from './asset/provider/IAssetsProvider';
 export * from './asset/provider/AssetUrlProvider';
+export * from './asset/provider/AssetsCdnProvider';
 //
 export * from './cookie/CookieStorageUtil';
 export * from './cookie/ICookieOptions';
