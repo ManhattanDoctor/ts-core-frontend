@@ -1,15 +1,16 @@
 import { UrlUtil } from "@ts-core/common";
-import { IAssetsProvider } from "./IAssetsProvider";
 import * as _ from 'lodash';
+import { AssetUrlProvider } from "./AssetUrlProvider";
 
-export class AssetUrlProvider implements IAssetsProvider {
+export class AssetsCdnProvider extends AssetUrlProvider {
     // --------------------------------------------------------------------------
     //
     //	Properties
     //
     // --------------------------------------------------------------------------
 
-    public url: string;
+    public cdnUrl: string;
+    public cdnDirectories: Array<string>;
 
     // --------------------------------------------------------------------------
     //
@@ -17,19 +18,10 @@ export class AssetUrlProvider implements IAssetsProvider {
     //
     // --------------------------------------------------------------------------
 
-    constructor(url: string) {
-        this.url = UrlUtil.parseUrl(url);
-    }
-
-    // --------------------------------------------------------------------------
-    //
-    //	Protected Methods
-    //
-    // --------------------------------------------------------------------------
-
-    protected createUrl(baseUrl: string, directory: string, name: string, extension: string): string {
-        let value = `${baseUrl}${UrlUtil.parseUrl(directory)}${name}`;
-        return !_.isNil(extension) ? `${value}.${extension}` : value;
+    constructor(url: string, cdnUrl?: string, cdnDirectories?: Array<string>) {
+        super(url);
+        this.cdnUrl = cdnUrl;
+        this.cdnDirectories = !_.isNil(cdnDirectories) ? cdnDirectories : ['icon', 'image', 'background', 'video', 'sound', 'file'];
     }
 
     // --------------------------------------------------------------------------
@@ -39,6 +31,9 @@ export class AssetUrlProvider implements IAssetsProvider {
     // --------------------------------------------------------------------------
 
     public getUrl(directory: string, name: string, extension: string): string {
-        return this.createUrl(this.url, directory, name, extension);
+        if (_.isEmpty(this.cdnDirectories) || !this.cdnDirectories.includes(directory)) {
+            return super.getUrl(directory, name, extension);
+        }
+        return this.createUrl(this.cdnUrl, directory, name, extension);
     }
 }
