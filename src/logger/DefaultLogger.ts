@@ -10,5 +10,6 @@ export class DefaultLogger extends LoggerWrapper {
     constructor(level: LoggerLevel, context?: any) {
         super(console, context, level);
         console['verbose'] = console.info;
+        console['debug'] = console.info;
     }
 }
