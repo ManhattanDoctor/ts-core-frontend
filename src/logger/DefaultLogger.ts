@@ -9,7 +9,10 @@ export class DefaultLogger extends LoggerWrapper {
 
     constructor(level: LoggerLevel, context?: any) {
         super(console, context, level);
-        console['verbose'] = console.info;
-        console['debug'] = console.info;
+        try {
+            console['debug'] = console.info;
+            console['verbose'] = console.info;
+        }
+        catch (error) { }
     }
 }
