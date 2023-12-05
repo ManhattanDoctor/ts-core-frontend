@@ -112,11 +112,11 @@ export class LanguageService<T = any> extends Loadable<LanguageTranslatorEvent, 
     }
 
     public compile(key: string, params?: Object): string {
-        return this.translator.compile({ key, params });
+        return this.translator.compile(key, params);
     }
 
     public translate(key: string, params?: Object): string {
-        return this.translator.translate({ key, params });
+        return this.translator.translate(key, params);
     }
 
     public isHasTranslation(key: string, isOnlyIfNotEmpty?: boolean): boolean {
