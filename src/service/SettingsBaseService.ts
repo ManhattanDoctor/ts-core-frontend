@@ -104,9 +104,6 @@ export class SettingsBaseService extends AbstractSettingsStorage implements IDes
                 this._assetsUrl = SettingsBaseService.parseUrl(value);
                 break;
         }
-
-        // SettingsBaseService.parseUrl(this.getValue('apiUrl'));
-        // SettingsBaseService.parseUrl(this.getValue('assetsUrl'));
     }
 
     // --------------------------------------------------------------------------

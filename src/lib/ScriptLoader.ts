@@ -1,6 +1,5 @@
 import { ObservableData, PromiseHandler, Loadable, LoadableEvent, LoadableStatus } from '@ts-core/common';
 import * as _ from 'lodash';
-import { NativeWindowService } from '../service/NativeWindowService';
 
 export class ScriptLoader extends Loadable {
     // --------------------------------------------------------------------------
@@ -10,8 +9,9 @@ export class ScriptLoader extends Loadable {
     // --------------------------------------------------------------------------
 
     private url: string;
-    private _document: Document;
     private promise: PromiseHandler<void>;
+
+    protected document: Document;
 
     // --------------------------------------------------------------------------
     //
@@ -22,7 +22,17 @@ export class ScriptLoader extends Loadable {
     constructor(url: string, item?: Document) {
         super();
         this.url = url;
-        this._document = !_.isNil(item) ? item : document;
+        this.document = !_.isNil(item) ? item : document;
+    }
+
+    // --------------------------------------------------------------------------
+    //
+    //  Protected Methods
+    //
+    // --------------------------------------------------------------------------
+
+    protected async createScript(): Promise<HTMLScriptElement> {
+        return this.document.createElement('script');
     }
 
     // --------------------------------------------------------------------------
@@ -36,16 +46,16 @@ export class ScriptLoader extends Loadable {
             return this.promise.promise;
         }
 
-        let script = this.document.createElement('script');
-        this.document.documentElement.firstChild.appendChild(script);
+        let item = await this.createScript();
+        this.document.documentElement.firstChild.appendChild(item);
 
-        script.onload = () => {
+        item.onload = () => {
             this.status = LoadableStatus.LOADED;
             this.observer.next(new ObservableData(LoadableEvent.COMPLETE));
             this.observer.next(new ObservableData(LoadableEvent.FINISHED));
             this.promise.resolve();
         }
-        script.onerror = (event) => {
+        item.onerror = (event) => {
             this.status = LoadableStatus.ERROR;
             this.observer.next(new ObservableData(LoadableEvent.ERROR));
             this.observer.next(new ObservableData(LoadableEvent.FINISHED));
@@ -53,18 +63,7 @@ export class ScriptLoader extends Loadable {
         };
 
         this.promise = PromiseHandler.create<void>();
-        script.src = this.url;
+        item.src = this.url;
         return this.promise.promise;
     }
-
-    // --------------------------------------------------------------------------
-    //
-    //  Private Properties
-    //
-    // --------------------------------------------------------------------------
-
-    private get document(): Document {
-        return this._document;
-    }
-
 }
