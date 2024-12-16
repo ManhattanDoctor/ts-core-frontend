@@ -1,6 +1,5 @@
 import { ObservableData, LoadableEvent, DestroyableContainer } from '@ts-core/common';
 import { Observable, filter, takeUntil, Subscription } from 'rxjs';
-import {  } from 'rxjs';
 import { LoadingService } from '../service/LoadingService';
 import * as _ from 'lodash';
 
@@ -79,7 +78,7 @@ export class LoadingServiceManager extends DestroyableContainer {
     }
 
     public destroy(): void {
-        if (this.items) {
+        if (!_.isNil(this.items)) {
             this.items.forEach(value => value.unsubscribe());
             this.items.clear();
             this.items = null;
