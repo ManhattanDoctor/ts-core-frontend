@@ -1,6 +1,5 @@
-import { UrlUtil } from "@ts-core/common";
-import * as _ from 'lodash';
 import { AssetUrlProvider } from "./AssetUrlProvider";
+import * as _ from 'lodash';
 
 export class AssetsCdnProvider extends AssetUrlProvider {
     // --------------------------------------------------------------------------
@@ -31,7 +30,7 @@ export class AssetsCdnProvider extends AssetUrlProvider {
     // --------------------------------------------------------------------------
 
     public getUrl(directory: string, name: string, extension: string): string {
-        if (_.isEmpty(this.cdnDirectories) || !this.cdnDirectories.includes(directory)) {
+        if (_.isNil(this.cdnUrl) || !this.cdnDirectories.includes(directory)) {
             return super.getUrl(directory, name, extension);
         }
         return this.createUrl(this.cdnUrl, directory, name, extension);
