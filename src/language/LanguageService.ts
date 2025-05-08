@@ -1,22 +1,21 @@
-import { Loadable, ExtendedError, MapCollection, ObservableData, LoadableEvent, LoadableStatus } from '@ts-core/common';
-import * as _ from 'lodash';
+import { Loadable, ExtendedError, ObservableData, LoadableEvent, LoadableStatus } from '@ts-core/common';
 import { takeUntil } from 'rxjs';
 import { CookieStorageUtil, ICookieStorageOptions } from '../cookie';
-import { LanguageFileLoader, LanguageTranslator, ILanguageLoader, ILanguageTranslator, Language, LanguageLocale, LanguageTranslatorEvent } from '@ts-core/language';
-export class LanguageService<T = any> extends Loadable<LanguageTranslatorEvent, Language> {
+import { LanguageTranslator, ILanguageLoader, ILanguageTranslator, LanguageLocale, LanguageTranslatorEvent } from '@ts-core/language';
+import * as _ from 'lodash';
+
+export class LanguageService<T = any> extends Loadable<LanguageTranslatorEvent, string> {
     // --------------------------------------------------------------------------
     //
     //	Properties
     //
     // --------------------------------------------------------------------------
 
-    protected isInitialized: boolean;
+    protected options: ILanguageServiceOptions;
 
-    protected _language: Language;
-    protected _languages: MapCollection<Language>;
-    protected _rawTranslation: any;
-
+    protected _locale: string;
     protected _loader: ILanguageLoader<T>;
+    protected _rawTranslation: any;
     protected _translator: ILanguageTranslator;
 
     // --------------------------------------------------------------------------
@@ -25,13 +24,12 @@ export class LanguageService<T = any> extends Loadable<LanguageTranslatorEvent, 
     //
     // --------------------------------------------------------------------------
 
-    constructor(private options?: ILanguageServiceOptions) {
+    constructor(options?: ILanguageServiceOptions) {
         super();
-        this._loader = new LanguageFileLoader(null);
-        this._translator = new LanguageTranslator();
 
-        this.addDestroyable(this.translator);
-        this.translator.events.pipe(takeUntil(this.destroyed)).subscribe(event => this.observer.next(new ObservableData(event.type, this.language, event.error)));
+        this.options = options;
+        this._translator = this.addDestroyable(new LanguageTranslator());
+        this.translator.events.pipe(takeUntil(this.destroyed)).subscribe(event => this.observer.next(new ObservableData(event.type, this.locale, event.error)));
     }
 
     // --------------------------------------------------------------------------
@@ -40,41 +38,34 @@ export class LanguageService<T = any> extends Loadable<LanguageTranslatorEvent, 
     //
     // --------------------------------------------------------------------------
 
-    protected async load(locale?: string | Language): Promise<void> {
+    protected async load(locale?: string): Promise<void> {
         if (this.isDestroyed) {
             return;
         }
-
-        if (locale instanceof Language) {
-            locale = locale.locale;
-        }
-
-        let language = this.languages.get(locale);
-        if (_.isNil(language)) {
-            throw new ExtendedError(`Unable to find language with locale "${locale}"`);
-        }
-
         this.status = LoadableStatus.LOADING;
-        this.observer.next(new ObservableData(LoadableEvent.STARTED, language));
+        this.observer.next(new ObservableData(LoadableEvent.STARTED, locale));
 
         try {
-            let translation = await this.loader.load(language.locale);
+            let translation = await this.loader.load(locale);
             if (this.isDestroyed) {
                 return;
             }
-            this._language = language;
             this._rawTranslation = translation;
-            this._translator.locale = new LanguageLocale(language, translation);
+            this._translator.locale = new LanguageLocale(locale, translation);
             CookieStorageUtil.put(this.options, locale);
 
             this.status = LoadableStatus.LOADED;
-            this.observer.next(new ObservableData(LoadableEvent.COMPLETE, language));
+            this.observer.next(new ObservableData(LoadableEvent.COMPLETE, locale));
         } catch (error) {
             this.status = LoadableStatus.ERROR;
-            this.observer.next(new ObservableData(LoadableEvent.ERROR, language, ExtendedError.create(error)));
+            this.observer.next(new ObservableData(LoadableEvent.ERROR, locale, ExtendedError.create(error)));
         } finally {
-            this.observer.next(new ObservableData(LoadableEvent.FINISHED, language));
+            this.observer.next(new ObservableData(LoadableEvent.FINISHED, locale));
         }
+    }
+
+    protected commitLocaleProperties(): void {
+        this.load(this.locale);
     }
 
     protected commitLoaderProperties(): void { }
@@ -85,29 +76,7 @@ export class LanguageService<T = any> extends Loadable<LanguageTranslatorEvent, 
     //
     // --------------------------------------------------------------------------
 
-    public initialize(url: string, languages: MapCollection<Language>): void {
-        if (this.isInitialized) {
-            throw new ExtendedError('Service already initialized');
-        }
-        if (_.isEmpty(url)) {
-            throw new ExtendedError('Url is nil');
-        }
-        if (_.isEmpty(languages)) {
-            throw new ExtendedError('Languages is empty');
-        }
-
-        if (this.loader instanceof LanguageFileLoader) {
-            this.loader.url = url;
-        }
-
-        this._languages = languages;
-        this.isInitialized = true;
-    }
-
     public loadIfExist(defaultLocale?: string): void {
-        if (!this.isInitialized) {
-            throw new ExtendedError('Service in not initialized');
-        }
         this.load(CookieStorageUtil.get(this.options) || defaultLocale);
     }
 
@@ -128,10 +97,7 @@ export class LanguageService<T = any> extends Loadable<LanguageTranslatorEvent, 
             return;
         }
         super.destroy();
-
         this.loader = null;
-        this._language = null;
-        this._languages = null;
         this._rawTranslation = null;
     }
 
@@ -140,6 +106,17 @@ export class LanguageService<T = any> extends Loadable<LanguageTranslatorEvent, 
     //	Public Properties
     //
     // --------------------------------------------------------------------------
+
+    public get locale(): string {
+        return this._locale;
+    }
+    public set locale(value: string) {
+        if (value === this._locale) {
+            return;
+        }
+        this._locale = value;
+        this.commitLocaleProperties();
+    }
 
     public get loader(): ILanguageLoader<T> {
         return this._loader;
@@ -160,25 +137,6 @@ export class LanguageService<T = any> extends Loadable<LanguageTranslatorEvent, 
 
     public get rawTranslation(): any {
         return this._loader.translation;
-    }
-
-    public get locale(): string {
-        return this.language ? this.language.locale : null;
-    }
-
-    public get language(): Language {
-        return this._language;
-    }
-    public set language(value: Language) {
-        if (value === this._language) {
-            return;
-        }
-        this._language = value;
-        this.load(value);
-    }
-
-    public get languages(): MapCollection<Language> {
-        return this._languages;
     }
 }
 

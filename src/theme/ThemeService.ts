@@ -1,9 +1,8 @@
 import { Destroyable, ExtendedError, MapCollection } from '@ts-core/common';
-import * as _ from 'lodash';
 import { Observable, filter, Subject } from 'rxjs';
-import { } from 'rxjs';
 import { CookieStorageUtil, ICookieStorageOptions } from '../cookie';
 import { Theme } from './Theme';
+import * as _ from 'lodash';
 
 export class ThemeService extends Destroyable {
     // --------------------------------------------------------------------------
@@ -62,13 +61,7 @@ export class ThemeService extends Destroyable {
         this.isInitialized = true;
 
         this.themes.clear();
-        if (!_.isEmpty(themes)) {
-            for (let item of themes) {
-                let theme = new Theme();
-                theme.update(item);
-                this.themes.add(theme);
-            }
-        }
+        themes.map(item => new Theme(item)).forEach(item => this.themes.add(item));
     }
 
     public loadIfExist(defaultTheme?: string): void {

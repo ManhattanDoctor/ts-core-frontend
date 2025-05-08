@@ -1,3 +1,5 @@
+import * as _ from 'lodash';
+
 export class Theme {
     // --------------------------------------------------------------------------
     //
@@ -6,9 +8,9 @@ export class Theme {
     // --------------------------------------------------------------------------
 
     public name: string;
+    public styles: any;
     public isDark: boolean;
 
-    public styles: any;
     private _styleName: string;
 
     // --------------------------------------------------------------------------
@@ -17,8 +19,11 @@ export class Theme {
     //
     // --------------------------------------------------------------------------
 
-    constructor() {
+    constructor(data?: any) {
         this.styles = {};
+        if (!_.isNil(data)) {
+            this.update(data);
+        }
     }
 
     // --------------------------------------------------------------------------
@@ -28,7 +33,7 @@ export class Theme {
     // --------------------------------------------------------------------------
 
     public getStyle<T>(name: string): T {
-        return this.styles ? this.styles[name] : null;
+        return !_.isNil(this.styles) ? this.styles[name] : null;
     }
 
     // --------------------------------------------------------------------------
@@ -61,6 +66,7 @@ export class Theme {
     public get id(): string {
         return this.name;
     }
+
     public get styleName(): string {
         return this._styleName || this.name + '-theme';
     }
