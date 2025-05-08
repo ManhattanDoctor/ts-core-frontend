@@ -17,7 +17,7 @@ export * from './logger/DefaultLogger';
 export * from './service/LoadingService';
 export * from './service/LoadingServiceManager';
 export * from './service/NativeWindowService';
-export * from './service/SettingsBaseService';
+export * from './service/SettingsServiceBase';
 //
 export * from './theme/Theme';
 export * from './theme/ThemeService';
