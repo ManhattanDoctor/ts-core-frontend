@@ -70,7 +70,7 @@ export class LanguageService<T = any> extends Loadable<LanguageTranslatorEvent, 
     // --------------------------------------------------------------------------
 
     public loadIfExist(defaultLocale?: string): void {
-        this.load(CookieStorageUtil.get(this.options) || defaultLocale);
+        this.locale = CookieStorageUtil.get(this.options) || defaultLocale;
     }
 
     public compile(key: string, params?: Object): string {

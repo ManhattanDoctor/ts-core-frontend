@@ -1,3 +1,3 @@
 export interface IAssetsProvider {
-    getUrl(folder: string, name: string, extension: string): string;
+    getUrl(directory: string, name: string, extension: string): string;
 }

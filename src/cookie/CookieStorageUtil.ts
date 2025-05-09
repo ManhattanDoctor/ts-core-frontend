@@ -29,6 +29,6 @@ export class CookieStorageUtil {
     }
 
     public static isValid(item: ICookieStorageOptions): boolean {
-        return item && item.service && !_.isEmpty(item.name);
+        return !_.isNil(item) && !_.isNil(item.service) && !_.isEmpty(item.name);
     }
 }
