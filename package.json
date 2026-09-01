@@ -1,7 +1,7 @@
 {
     "name": "@ts-core/frontend",
     "version": "3.0.20",
-    "description": "Classes and utils for frontend",
+    "description": "TypeScript utilities and services for frontend applications: asset management, themes, localization and loading state handling",
     "main": "./cjs/public-api.js",
     "module": "./esm/public-api.js",
     "exports": {
@@ -29,7 +29,16 @@
         "url": "git+https://github.com/ManhattanDoctor/ts-core-frontend.git"
     },
     "keywords": [
-        "typescript"
+        "typescript",
+        "frontend",
+        "browser",
+        "theme",
+        "localization",
+        "language",
+        "assets",
+        "cookie",
+        "storage",
+        "loadable"
     ],
     "bugs": {
         "url": "https://github.com/ManhattanDoctor/ts-core-frontend/issues"
